@@ -39,12 +39,39 @@
             background-color: #ffaa00;
             transform: scale(1.05);
         }
+        select {
+            width: 100%;
+            padding: 10px;
+            border-radius: 5px;
+            font-size: 16px;
+        }
     </style>
+    <script>
+        function changeTheme() {
+            let theme = document.getElementById("themeSelect").value;
+            localStorage.setItem("selectedTheme", theme);
+            window.location.href = 'index.html';
+        }
+        
+        function applySavedTheme() {
+            let theme = localStorage.getItem("selectedTheme") || "atc";
+            document.getElementById("themeSelect").value = theme;
+        }
+        window.onload = applySavedTheme;
+    </script>
 </head>
 <body>
     <h2>Settings</h2>
     <div class="container">
-        <h3>Download QC History</h3>
+        <h3>Select Theme</h3>
+        <select id="themeSelect" onchange="changeTheme()">
+            <option value="atc">ATC Theme</option>
+            <option value="retro">80s Retro</option>
+            <option value="disco">60s Disco</option>
+            <option value="summer">Summer</option>
+            <option value="winter">Winter</option>
+        </select>
+        <br><br>
         <button onclick="window.location.href='index.html'">Back to QC Tool</button>
     </div>
 </body>
