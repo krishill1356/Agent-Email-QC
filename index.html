@@ -13,7 +13,7 @@
             color: #212529;
             text-align: center;
             padding: 20px;
-            cursor: url('https://abs.twimg.com/emoji/v2/72x72/2708.png'), auto;
+            cursor: url('https://example.com/small_airplane_cursor.png'), auto; /* Replace with the URL of a smaller airplane cursor image */
             display: flex;
             flex-direction: column;
             align-items: center;
@@ -72,7 +72,7 @@
             transform: scale(1.05);
         }
         .logo {
-            max-width: 80px;
+            max-width: 150px; /* Increased size */
             display: block;
             margin: 0 auto 20px auto;
         }
@@ -91,6 +91,7 @@
                 alert("Please paste an email to evaluate.");
                 return;
             }
+
             let categories = {
                 "Grammar & Readability": 2,
                 "Professionalism & Tone": 2,
@@ -98,7 +99,7 @@
                 "Customer Understanding & Resolution": 2,
                 "Formatting & Structure": 2
             };
-            
+
             function assessCategory(category, condition, deduction, reason) {
                 if (condition) {
                     categories[category] -= deduction;
@@ -106,14 +107,28 @@
                 }
                 return `<p><b>${category} (${categories[category]}/2):</b> No issues found.</p>`;
             }
-            
+
             let feedback = "";
             feedback += assessCategory("Grammar & Readability", !emailText.match(/[.!?]/), 1, "Lacks punctuation. Consider breaking long sentences with proper punctuation.");
             feedback += assessCategory("Professionalism & Tone", emailText.includes("urgent"), 1, "Avoid using 'urgent' unless necessary. Use a more professional tone.");
             feedback += assessCategory("Accuracy & Policy Compliance", emailText.match(/we need passport|send us passport/i), 1, "Instead of demanding a document, politely request it in line with company policy.");
             feedback += assessCategory("Customer Understanding & Resolution", emailText.length < 50, 1, "Response might be too brief. Ensure complete and informative responses.");
             feedback += assessCategory("Professionalism & Tone", !emailText.match(/thank you|appreciate your patience/i), 1, "Consider adding a polite closing to enhance professionalism.");
-            
+
+            // Additional feedback based on Indeed's guidelines
+            if (!emailText.match(/Dear|Hello|Hi/)) {
+                feedback += "<p><b>Salutation:</b> Starting the email with a proper salutation like 'Dear [Customer's Name]' sets a professional tone.</p>";
+            }
+            if (!emailText.match(/Sincerely|Best regards|Thank you/)) {
+                feedback += "<p><b>Closing:</b> Ending the email with a courteous closing phrase like 'Sincerely' or 'Best regards' leaves a positive impression.</p>";
+            }
+            if (!emailText.match(/I apologize|We apologize|I'm sorry/)) {
+                feedback += "<p><b>Empathy:</b> Expressing empathy, especially when addressing complaints or issues, shows customers that you value their feelings and experiences.</p>";
+            }
+            if (!emailText.match(/please|thank you|appreciate/)) {
+                feedback += "<p><b>Courtesy:</b> Using polite words like 'please' and 'thank you' enhances the customer's experience and reflects well on the company.</p>";
+            }
+
             let finalScore = Object.values(categories).reduce((a, b) => a + b, 0);
             document.getElementById("results").innerHTML = `<b>Total Score:</b> ${finalScore}/10`;
             document.getElementById("feedback").innerHTML = feedback;
@@ -125,13 +140,6 @@
     <img src="ATC.png" alt="Air Travel Claim Logo" class="logo">
     <h2>Email QC Evaluation Tool</h2>
     <div class="container">
-        <input type="text" id="agentName" placeholder="Enter Agent's Name"><br><br>
-        <textarea id="emailInput" placeholder="Paste your email here..."></textarea><br>
-        <button onclick="evaluateEmail()">Get QC Result</button>
-        <h3>Results:</h3>
-        <p id="results"></p>
-        <h3>Feedback & Improvements:</h3>
-        <div id="feedback"></div>
-    </div>
-</body>
-</html>
+        <input type="text" id="agentName" placeholder="Enter Agent's Name
+::contentReference[oaicite:6]{index=6}
+ 
