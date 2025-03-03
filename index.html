@@ -92,22 +92,32 @@
                 "Customer Understanding & Resolution": 2,
                 "Formatting & Structure": 2
             };
-            function assessCategory(category, condition, deduction, reason) {
+            function assessCategory(category, condition, deduction, reason, quoteExample) {
                 if (condition) {
                     categories[category] -= deduction;
-                    return `<p><b>${category} (${categories[category]}/2):</b> ${reason}</p>`;
+                    return `<p><b>${category} (${categories[category]}/2):</b> ${reason} <br><i>Example from email:</i> "${quoteExample}"</p>`;
                 }
                 return `<p><b>${category} (${categories[category]}/2):</b> No issues found.</p>`;
             }
-            feedback += assessCategory("Grammar & Readability", !emailText.match(/[.!?]/), 1, "Ensure proper punctuation for clarity.");
-            feedback += assessCategory("Professionalism & Tone", emailText.includes("urgent"), 1, "Consider using more professional wording instead of 'urgent'.");
-            feedback += assessCategory("Accuracy & Policy Compliance", emailText.match(/we need passport|send us passport/i), 1, "Use clear and policy-compliant phrasing for document requests.");
-            feedback += assessCategory("Customer Understanding & Resolution", emailText.length < 50, 1, "Ensure your response is informative and sufficiently detailed.");
-            feedback += assessCategory("Professionalism & Tone", !emailText.match(/thank you|appreciate your patience/i), 1, "Always include a polite closing.");
+            feedback += assessCategory("Grammar & Readability", !emailText.match(/[.!?]/), 1, "Ensure proper punctuation for clarity.", emailText.substring(0, 50));
+            feedback += assessCategory("Professionalism & Tone", emailText.includes("urgent"), 1, "Consider using more professional wording instead of 'urgent'.", "urgent");
+            feedback += assessCategory("Accuracy & Policy Compliance", emailText.match(/we need passport|send us passport/i), 1, "Use clear and policy-compliant phrasing for document requests.", "we need passport");
+            feedback += assessCategory("Customer Understanding & Resolution", emailText.length < 50, 1, "Ensure your response is informative and sufficiently detailed.", emailText);
+            feedback += assessCategory("Professionalism & Tone", !emailText.match(/thank you|appreciate your patience/i), 1, "Always include a polite closing.", "[No closing statement found]");
             let finalScore = Object.values(categories).reduce((a, b) => a + b, 0);
-            let bestPractices = "<br><br><i>Note: This evaluation follows best practices observed in professional customer service emails. Formatting and clarity have been referenced based on industry standards and real-world examples.</i>";
+            let detailedAnalysis = `
+                <h3>Detailed Analysis:</h3>
+                <ul>
+                    <li><b>Grammar:</b> Sentence structure and punctuation accuracy.</li>
+                    <li><b>Tone & Professionalism:</b> Politeness, clarity, and adherence to formal business communication.</li>
+                    <li><b>Accuracy:</b> Correctness of the information provided based on policies and guidelines.</li>
+                    <li><b>Customer Understanding:</b> Ensuring the response fully answers the customer's inquiry.</li>
+                    <li><b>Formatting:</b> Proper paragraph structure, readability, and emphasis on key information.</li>
+                </ul>
+                <p><i>This feedback is based on industry best practices and real-world email communication standards.</i></p>
+            `;
             document.getElementById("results").innerHTML = `<b>Total Score:</b> ${finalScore}/10`;
-            document.getElementById("feedback").innerHTML = feedback + bestPractices;
+            document.getElementById("feedback").innerHTML = feedback + detailedAnalysis;
         }
     </script>
 </head>
@@ -125,8 +135,5 @@
         <h3>Feedback & Improvements:</h3>
         <div id="feedback"></div>
     </div>
-</body>
-</html>
-
 </body>
 </html>
