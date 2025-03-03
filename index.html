@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Email QC Tool</title>
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Orbitron:wght@400;600&family=Roboto:wght@300;400;700&display=swap" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.16.9/xlsx.full.min.js"></script>
+    <style id="theme-style">
+        body {
+            font-family: 'Press Start 2P', cursive;
+            background-color: #121212;
+            color: #ffcc00;
+            text-align: center;
+            padding: 20px;
+        }
+        .container {
+            width: 80%;
+            margin: auto;
+            text-align: left;
+            background-color: #1a1a1a;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0px 0px 20px rgba(255, 255, 255, 0.1);
+        }
+        h2 {
+            font-size: 42px;
+            color: #ff0080;
+            text-transform: uppercase;
+            text-shadow: 0px 0px 10px rgba(255, 0, 128, 0.8);
+        }
+        h3 {
+            color: #00ffff;
+            font-weight: 600;
+            margin-top: 20px;
+            text-shadow: 0px 0px 10px rgba(0, 255, 255, 0.8);
+        }
+        textarea, input, select {
+            width: 100%;
+            background-color: #262626;
+            color: #ffffff;
+            border: 2px solid #ff0080;
+            padding: 10px;
+            font-size: 16px;
+            border-radius: 5px;
+            box-shadow: 0px 0px 10px #ff0080;
+        }
+        button {
+            background-color: #ffcc00;
+            color: black;
+            border: none;
+            padding: 15px 30px;
+            font-size: 20px;
+            cursor: pointer;
+            margin-top: 20px;
+            border-radius: 10px;
+            font-weight: 600;
+            transition: 0.3s ease;
+            text-transform: uppercase;
+            box-shadow: 0px 0px 15px rgba(255, 204, 0, 0.8);
+        }
+        button:hover {
+            background-color: #ffaa00;
+            transform: scale(1.05);
+        }
+        .score-section {
+            background-color: #222;
+            padding: 15px;
+            margin: 10px 0;
+            border-radius: 8px;
+            box-shadow: 0px 0px 10px rgba(255, 255, 255, 0.1);
+        }
+        .logo {
+            max-width: 300px;
+            margin-bottom: 20px;
+        }
+        .settings-icon {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            font-size: 24px;
+            cursor: pointer;
+        }
+    </style>
+    <script>
+        let reviewHistory = [];
+        
+        function evaluateEmail() {
+            let emailText = document.getElementById("emailInput").value;
+            let agentName = document.getElementById("agentName").value;
+            let reviewDate = new Date().toISOString().split('T')[0];
+            let totalScore = 0;
+            let detailedFeedback = "";
+            let scoreBreakdown = "";
+            
+            let scores = {
+                "Grammar & Readability": 5,
+                "Professionalism & Tone": 5,
+                "Accuracy & Policy Compliance": 5,
+                "Customer Understanding & Resolution": 5,
+                "Formatting & Structure": 5
+            };
+            
+            if (!emailText.match(/[.!?]/)) {
+                scores["Grammar & Readability"] -= 3;
+                detailedFeedback += `<div class='score-section'><b>Grammar & Readability:</b> ${scores["Grammar & Readability"]}/5<br> - Issue: Missing punctuation. Example: "${emailText.split(' ').slice(0, 10).join(' ')}..."</div>`;
+            }
+            
+            totalScore = (Object.values(scores).reduce((a, b) => a + b, 0) / 25) * 10;
+            totalScore = totalScore.toFixed(2);
+            
+            for (let [key, value] of Object.entries(scores)) {
+                scoreBreakdown += `<div class='score-section'><b>${key}:</b> ${value}/5</div>`;
+            }
+            
+            document.getElementById("results").innerHTML = `<b>Total Score:</b> ${totalScore}/10 ${scoreBreakdown}`;
+            document.getElementById("feedback").innerHTML = detailedFeedback || "<div class='score-section'>Great job! No major improvements needed.</div>";
+            
+            reviewHistory.push({ agentName, reviewDate, totalScore, emailText, feedback: detailedFeedback });
+        }
+        
+        function downloadResults() {
+            let ws = XLSX.utils.json_to_sheet(reviewHistory);
+            let wb = XLSX.utils.book_new();
+            XLSX.utils.book_append_sheet(wb, ws, "QC History");
+            XLSX.writeFile(wb, "Email_QC_History.xlsx");
+        }
+    </script>
+</head>
+<body>
+    <div class="settings-icon" onclick="window.location.href='settings.html'">⚙️</div>
+    <img src="ATC.png" alt="Air Travel Claim Logo" class="logo">
+    <h2>Email QC Evaluation Tool</h2>
+    <div class="container">
+        <input type="text" id="agentName" placeholder="Enter Agent's Name"><br><br>
+        <textarea id="emailInput" placeholder="Paste your email here..."></textarea><br>
+        <button onclick="evaluateEmail()">Get QC Result</button>
+        <button onclick="downloadResults()">Download QC History</button>
+        <h3>Results:</h3>
+        <p id="results"></p>
+        <h3>Feedback & Improvements:</h3>
+        <div id="feedback"></div>
+    </div>
+</body>
+</html>
