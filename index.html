@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Email QC Tool</title>
+    <title>A.C.E QC - Agent Client Email Quality Control</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.16.9/xlsx.full.min.js"></script>
     <style id="theme-style">
@@ -13,7 +13,7 @@
             color: #212529;
             text-align: center;
             padding: 20px;
-            cursor: url('airplane-cursor.png'), auto;
+            cursor: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><text y="16" font-size="16">✈️</text></svg>') 16 16, auto;
         }
         .container {
             width: 80%;
@@ -24,10 +24,14 @@
             border-radius: 15px;
             box-shadow: 0px 0px 20px rgba(0, 0, 0, 0.1);
         }
-        h2 {
-            font-size: 32px;
+        .header-title {
+            font-size: 48px;
+            font-weight: bold;
             color: #0056b3;
-            text-transform: uppercase;
+        }
+        .header-subtitle {
+            font-size: 18px;
+            color: red;
         }
         h3 {
             color: #007bff;
@@ -71,13 +75,6 @@
             display: block;
             margin: 0 auto 20px auto;
         }
-        .settings-icon {
-            position: absolute;
-            top: 20px;
-            left: 20px;
-            font-size: 20px;
-            cursor: pointer;
-        }
     </style>
     <script>
         function evaluateEmail() {
@@ -88,7 +85,6 @@
             }
             let feedback = "";
             let totalScore = 10;
-            let detailedFeedback = "";
             let categories = {
                 "Grammar & Readability": 2,
                 "Professionalism & Tone": 2,
@@ -103,21 +99,23 @@
                 }
                 return `<p><b>${category} (${categories[category]}/2):</b> No issues found.</p>`;
             }
-            detailedFeedback += assessCategory("Grammar & Readability", !emailText.match(/[.!?]/), 1, "Ensure proper punctuation for clarity.");
-            detailedFeedback += assessCategory("Professionalism & Tone", emailText.includes("urgent"), 1, "Consider using more professional wording instead of 'urgent'.");
-            detailedFeedback += assessCategory("Accuracy & Policy Compliance", emailText.match(/we need passport|send us passport/i), 1, "Use clear and policy-compliant phrasing for document requests.");
-            detailedFeedback += assessCategory("Customer Understanding & Resolution", emailText.length < 50, 1, "Ensure your response is informative and sufficiently detailed.");
-            detailedFeedback += assessCategory("Professionalism & Tone", !emailText.match(/thank you|appreciate your patience/i), 1, "Always include a polite closing.");
+            feedback += assessCategory("Grammar & Readability", !emailText.match(/[.!?]/), 1, "Ensure proper punctuation for clarity.");
+            feedback += assessCategory("Professionalism & Tone", emailText.includes("urgent"), 1, "Consider using more professional wording instead of 'urgent'.");
+            feedback += assessCategory("Accuracy & Policy Compliance", emailText.match(/we need passport|send us passport/i), 1, "Use clear and policy-compliant phrasing for document requests.");
+            feedback += assessCategory("Customer Understanding & Resolution", emailText.length < 50, 1, "Ensure your response is informative and sufficiently detailed.");
+            feedback += assessCategory("Professionalism & Tone", !emailText.match(/thank you|appreciate your patience/i), 1, "Always include a polite closing.");
             let finalScore = Object.values(categories).reduce((a, b) => a + b, 0);
+            let bestPractices = "<br><br><i>Note: This evaluation follows best practices observed in professional customer service emails. Formatting and clarity have been referenced based on industry standards and real-world examples.</i>";
             document.getElementById("results").innerHTML = `<b>Total Score:</b> ${finalScore}/10`;
-            document.getElementById("feedback").innerHTML = detailedFeedback + '<br><br><i>Note: This evaluation is based on best practices observed in professional customer service emails, as seen in the provided reference image.</i>';
+            document.getElementById("feedback").innerHTML = feedback + bestPractices;
         }
     </script>
 </head>
 <body>
     <div class="settings-icon" onclick="window.location.href='settings.html'">⚙️</div>
     <img src="ATC.png" alt="Air Travel Claim Logo" class="logo">
-    <h2>Email QC Evaluation Tool</h2>
+    <h1 class="header-title">A.C.E QC</h1>
+    <p class="header-subtitle">Agent Client Email Quality Control</p>
     <div class="container">
         <input type="text" id="agentName" placeholder="Enter Agent's Name"><br><br>
         <textarea id="emailInput" placeholder="Paste your email here..."></textarea><br>
@@ -127,5 +125,8 @@
         <h3>Feedback & Improvements:</h3>
         <div id="feedback"></div>
     </div>
+</body>
+</html>
+
 </body>
 </html>
