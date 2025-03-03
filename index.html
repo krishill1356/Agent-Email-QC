@@ -98,17 +98,17 @@
             
             if (!emailText.match(/[.!?]/)) {
                 scores["Grammar & Readability"] -= 3;
-                detailedFeedback += `<div class='score-section'><b>Grammar & Readability:</b> ${scores["Grammar & Readability"]}/5<br> - Ensure proper punctuation and sentence clarity. Example: "${emailText.split(' ').slice(0, 10).join(' ')}..."</div>`;
+                detailedFeedback += `<div class='score-section'><b>Grammar & Readability:</b> ${scores["Grammar & Readability"]}/5<br> - Issue: Missing punctuation. Example: "${emailText.split(' ').slice(0, 10).join(' ')}..."</div>`;
             }
             
-            if (!emailText.match(/thank you|appreciate|understand/i)) {
+            if (emailText.includes("send us passport")) {
                 scores["Professionalism & Tone"] -= 3;
-                detailedFeedback += `<div class='score-section'><b>Professionalism & Tone:</b> ${scores["Professionalism & Tone"]}/5<br> - Ensure a warm, professional, and empathetic tone throughout the email.</div>`;
+                detailedFeedback += `<div class='score-section'><b>Professionalism & Tone:</b> ${scores["Professionalism & Tone"]}/5<br> - Issue: Tone too direct and lacks warmth. Example: "send us passport". Recommendation: Rephrase to "Please provide a copy of your passport at your earliest convenience."</div>`;
             }
             
             if (!emailText.match(/policy|terms|compensation/i)) {
                 scores["Accuracy & Policy Compliance"] -= 3;
-                detailedFeedback += `<div class='score-section'><b>Accuracy & Policy Compliance:</b> ${scores["Accuracy & Policy Compliance"]}/5<br> - Include necessary policy references to ensure clarity and compliance.</div>`;
+                detailedFeedback += `<div class='score-section'><b>Accuracy & Policy Compliance:</b> ${scores["Accuracy & Policy Compliance"]}/5<br> - Missing policy references. Ensure customers understand relevant terms and compensation rights.</div>`;
             }
             
             totalScore = (Object.values(scores).reduce((a, b) => a + b, 0) / 25) * 10;
