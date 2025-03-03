@@ -14,11 +14,15 @@
             text-align: center;
             padding: 20px;
             cursor: url('https://abs.twimg.com/emoji/v2/72x72/2708.png'), auto;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
         }
         .container {
             width: 80%;
             max-width: 800px;
-            margin: auto;
             background-color: #ffffff;
             padding: 30px;
             border-radius: 15px;
@@ -44,14 +48,12 @@
             padding: 10px;
             font-size: 16px;
             border-radius: 5px;
-            cursor: url('https://abs.twimg.com/emoji/v2/72x72/2708.png'), auto;
         }
         input {
             width: 100%;
             padding: 10px;
             font-size: 16px;
             border-radius: 5px;
-            cursor: url('https://abs.twimg.com/emoji/v2/72x72/2708.png'), auto;
         }
         button {
             background-color: #007bff;
@@ -59,7 +61,7 @@
             border: none;
             padding: 15px 30px;
             font-size: 20px;
-            cursor: url('https://abs.twimg.com/emoji/v2/72x72/2708.png'), auto;
+            cursor: pointer;
             margin-top: 20px;
             border-radius: 10px;
             font-weight: 600;
@@ -70,7 +72,7 @@
             transform: scale(1.05);
         }
         .logo {
-            max-width: 100px;
+            max-width: 80px;
             display: block;
             margin: 0 auto 20px auto;
         }
@@ -83,24 +85,12 @@
         }
     </style>
     <script>
-        function applyTheme() {
-            let savedTheme = localStorage.getItem("selectedTheme") || "atc";
-            let themeStyle = document.getElementById("theme-style");
-            if (savedTheme === "dark") {
-                themeStyle.innerHTML = `body { background-color: #121212; color: #ffffff; }`;
-            } else {
-                themeStyle.innerHTML = `body { background-color: #f8f9fa; color: #212529; }`;
-            }
-        }
         function evaluateEmail() {
             let emailText = document.getElementById("emailInput").value;
             if (!emailText.trim()) {
                 alert("Please paste an email to evaluate.");
                 return;
             }
-            let feedback = "";
-            let totalScore = 10;
-            let detailedFeedback = "";
             let categories = {
                 "Grammar & Readability": 2,
                 "Professionalism & Tone": 2,
@@ -117,17 +107,17 @@
                 return `<p><b>${category} (${categories[category]}/2):</b> No issues found.</p>`;
             }
             
-            detailedFeedback += assessCategory("Grammar & Readability", !emailText.match(/[.!?]/), 1, "Lacks punctuation, making it harder to read. Example: \"${emailText.substring(0, 50)}...\" Try: \"Please provide your details at your earliest convenience.\"");
-            detailedFeedback += assessCategory("Professionalism & Tone", emailText.includes("urgent"), 1, "Avoid using \"urgent\" unless necessary. Try: \"We kindly request that you respond at your earliest convenience.\"");
-            detailedFeedback += assessCategory("Accuracy & Policy Compliance", emailText.match(/we need passport|send us passport/i), 1, "Instead of \"We need passport\", say: \"We require a copy of your passport to proceed with your claim as per our policy.\"");
-            detailedFeedback += assessCategory("Customer Understanding & Resolution", emailText.length < 50, 1, "Response is too brief. Ensure you provide clear, comprehensive information addressing the customer's concern.");
-            detailedFeedback += assessCategory("Professionalism & Tone", !emailText.match(/thank you|appreciate your patience/i), 1, "Add a polite closing like \"Thank you for your patience\" to maintain a professional tone.");
+            let feedback = "";
+            feedback += assessCategory("Grammar & Readability", !emailText.match(/[.!?]/), 1, "Lacks punctuation. Consider breaking long sentences with proper punctuation.");
+            feedback += assessCategory("Professionalism & Tone", emailText.includes("urgent"), 1, "Avoid using 'urgent' unless necessary. Use a more professional tone.");
+            feedback += assessCategory("Accuracy & Policy Compliance", emailText.match(/we need passport|send us passport/i), 1, "Instead of demanding a document, politely request it in line with company policy.");
+            feedback += assessCategory("Customer Understanding & Resolution", emailText.length < 50, 1, "Response might be too brief. Ensure complete and informative responses.");
+            feedback += assessCategory("Professionalism & Tone", !emailText.match(/thank you|appreciate your patience/i), 1, "Consider adding a polite closing to enhance professionalism.");
             
             let finalScore = Object.values(categories).reduce((a, b) => a + b, 0);
             document.getElementById("results").innerHTML = `<b>Total Score:</b> ${finalScore}/10`;
-            document.getElementById("feedback").innerHTML = detailedFeedback;
+            document.getElementById("feedback").innerHTML = feedback;
         }
-        window.onload = applyTheme;
     </script>
 </head>
 <body>
