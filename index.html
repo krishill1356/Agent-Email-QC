@@ -13,6 +13,7 @@
             color: #212529;
             text-align: center;
             padding: 20px;
+            cursor: url('airplane-cursor.png'), auto;
         }
         .container {
             width: 80%;
@@ -66,7 +67,7 @@
             transform: scale(1.05);
         }
         .logo {
-            max-width: 200px; /* Increased size */
+            max-width: 200px;
             display: block;
             margin: 0 auto 20px auto;
         }
@@ -74,7 +75,7 @@
             position: absolute;
             top: 20px;
             left: 20px;
-            font-size: 20px; /* Reduced cursor size */
+            font-size: 20px;
             cursor: pointer;
         }
     </style>
@@ -109,7 +110,7 @@
             detailedFeedback += assessCategory("Professionalism & Tone", !emailText.match(/thank you|appreciate your patience/i), 1, "Always include a polite closing.");
             let finalScore = Object.values(categories).reduce((a, b) => a + b, 0);
             document.getElementById("results").innerHTML = `<b>Total Score:</b> ${finalScore}/10`;
-            document.getElementById("feedback").innerHTML = detailedFeedback;
+            document.getElementById("feedback").innerHTML = detailedFeedback + '<br><br><i>Note: This evaluation is based on best practices observed in professional customer service emails, as seen in the provided reference image.</i>';
         }
     </script>
 </head>
